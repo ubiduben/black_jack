@@ -20,14 +20,19 @@ function startGame() {
 }
 
 function populateDeck() {
-   for (var i = 2; i <= 11; i++) {
+   for (var i = 2; i <= 14; i++) {
        deck.push(i,i,i,i)
    }
-   // Add the royals (J/Q/K)
-   for (var i = 1; i <= 3; i++) {
-       deck.push(10,10,10,10)
-   }
-   console.log(deck)
+}
+
+let cardNames = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
+function getCardName(cardVal) {
+    return cardNames[cardVal - 2]
+}
+
+let cardValues = [2,3,4,5,6,7,8,9,10,10,10,10,11]
+function getCardPoints(cardVal) {
+    return cardValues[cardVal - 2]
 }
 
 function drawCard() {
@@ -41,9 +46,14 @@ function drawCard() {
         return null
     }
 
+    if(hasBlackJack) {
+        console.log("You've already won")
+        return null
+    }
+
     let index = Math.floor(Math.random()*deck.length)
     let value = deck[index]
-    console.log("foo " + index + " " + value)
+    console.log("drew a: " + getCardName(value) + " worth " + getCardPoints(value))
     deck.splice(Math.floor(Math.random()*deck.length), 1);
     cards.push(value)
     return value;
@@ -55,8 +65,9 @@ function renderGame() {
     let cardString = "Cards: "
     cardSum = 0
     for (var i = 0; i < cards.length; i++) {
-        cardString += cards[i] + " "
-        cardSum += cards[i]
+        let card = cards[i]
+        cardString += getCardName(card) + " "
+        cardSum += getCardPoints(card)
     }
 
     cardsEl.textContent = cardString
@@ -76,6 +87,10 @@ function renderGame() {
 
 
 function newCard() {
+    if (isAlive){
     drawCard()
-    renderGame()
+    renderGame()}
+    else {
+        console.log("you need to start the game first.")
+    }
 }
